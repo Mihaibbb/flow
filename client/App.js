@@ -38,8 +38,12 @@ export default function App() {
       socket.emit("connect_mobile", socket.id);
 
       socket.on("mesaj", (data) => {
-        console.warn(data);
-        setLights(data);
+        try {
+
+        } catch (e) {
+          console.log(e);
+        }
+        setLights([data]);
       });
 
     });
@@ -48,6 +52,14 @@ export default function App() {
   const handleRegionChange = () => {
     
   };  
+
+  useEffect(() => {
+    try {
+      console.log(lights);
+    } catch (e) {
+      console.log(e);
+    }
+  }, [lights]);
 
   return (
     <View style={styles.container}>
@@ -72,22 +84,21 @@ export default function App() {
             pinColor={"purple"}
          />  
 
-         {lights && lights.length && lights.map(light => (
-          <>
+         {lights && lights.length && lights.map((light, idx) => (
+          <View key={idx}>
             <Marker 
               coordinate={{
-                latitude: light.lat || 0,
-                longitude: light.long || 0
+                latitude: Number(light.lat) + 0.00017 || 0,
+                longitude: Number(light.long) + 0.008 || 0
               }}
-              title={""}
             >
               <View style={[styles.customMarker, { backgroundColor: light.traffic0.toLowerCase() }]} />
             </Marker>
 
             <Marker
               coordinate={{
-                latitude: light.lat + .0002 || 0,
-                longitude: light.long + .0002 || 0,
+                latitude: Number(light.lat) + .0002 || 0,
+                longitude: Number(light.long) + .0002 || 0,
               }}
             >
               <View style={[styles.customMarker, { backgroundColor: light.traffic1.toLowerCase() }]} />
@@ -96,9 +107,10 @@ export default function App() {
 
             <Marker
               coordinate={{
-                latitude: light.lat + .0004 || 0,
-                longitude: light.long + .0004 || 0,
+                latitude: Number(light.lat) + .0004 || 0,
+                longitude: Number(light.long) + .0004 || 0,
               }}
+              key={3}
             >
               <View style={[styles.customMarker, { backgroundColor: light.traffic2.toLowerCase() }]} />
 
@@ -106,14 +118,14 @@ export default function App() {
 
             <Marker
               coordinate={{
-                latitude: light.lat + .0004 || 0,
-                longitude: light.long + .0004 || 0,
+                latitude: (Number(light.lat) + .0008) || 0,
+                longitude: (Number(light.long) + .0008) || 0,
               }}
             >
               <View style={[styles.customMarker, { backgroundColor: light.traffic3.toLowerCase() }]} />
 
             </Marker>
-          </>
+          </View>
          ))}
       </MapView>  
     </View>
